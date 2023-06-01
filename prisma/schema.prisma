@@ -29,4 +29,6 @@ model House {
   builderId    String   @unique
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+  
+  @@index([ownerId, builderId]) // Planetscale doesn't index foreign keys, tell Prisma to index them
 }
