@@ -55,4 +55,10 @@ app.post('/house', async (req, res) => {
   res.json(newHouse)
 })
 
+// Read House
+app.get('/house', async (req, res) => {
+  const allHouses = await prisma.house.findMany()
+  res.json(allHouses)
+})
+
 app.listen(port, () => console.log(`Express server listening on ${port}`))
