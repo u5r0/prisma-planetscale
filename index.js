@@ -55,6 +55,12 @@ app.post('/house', async (req, res) => {
   res.json(newHouse)
 })
 
+// Create many Houses (as an array)
+app.post('/house/many', async (req, res) => {
+  const newHouses = await prisma.house.createMany({ data: req.body })
+  res.json(newHouses)
+})
+
 // Read House by id (in req url)
 app.get('/house/:id', async (req, res) => {
   const id = req.params.id
@@ -84,6 +90,16 @@ app.get('/house', async (req, res) => {
   })
   res.json(house)
 })
+
+// app.get('/house', async (req, res) => {
+//   const allHouses = await prisma.house.findMany({
+//     include: {
+//       owner: true,
+//       builder: true,
+//     }
+//   })
+//   res.json(allHouses)
+// })
 
 
 app.listen(port, () => console.log(`Express server listening on ${port}`))
