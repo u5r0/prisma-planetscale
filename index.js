@@ -57,7 +57,12 @@ app.post('/house', async (req, res) => {
 
 // Read House
 app.get('/house', async (req, res) => {
-  const allHouses = await prisma.house.findMany()
+  const allHouses = await prisma.house.findMany({
+    include: {
+      owner: true,
+      builder: true,
+    }
+  })
   res.json(allHouses)
 })
 
