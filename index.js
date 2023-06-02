@@ -27,7 +27,7 @@ app.put('/:id', async (req, res) => {
   const newAge = req.body.age // passed in the req json body
   const updatedUser = await prisma.user.update({
     where: {
-      id: parseInt(id) // passed as string in url
+      id,   // as uuid string
     },
     data: {
       age: newAge
@@ -41,7 +41,7 @@ app.delete('/:id', async (req, res) => {
   const id = req.params.id // passed in the url
   const deletedUser = await prisma.user.delete({
     where: {
-      id: parseInt(id)
+      id,
     }
   })
   res.json(deletedUser)
@@ -55,15 +55,35 @@ app.post('/house', async (req, res) => {
   res.json(newHouse)
 })
 
-// Read House
-app.get('/house', async (req, res) => {
-  const allHouses = await prisma.house.findMany({
+// Read House by id (in req url)
+app.get('/house/:id', async (req, res) => {
+  const id = req.params.id
+  const house = await prisma.house.findUnique({
+    where: {
+      id, // where id in the (schema) equals to id provided in (req)
+    },
     include: {
       owner: true,
       builder: true,
     }
   })
-  res.json(allHouses)
+  res.json(house)
 })
+
+// Read House by address (in req body)
+app.get('/house', async (req, res) => {
+  const address = req.body.address
+  const house = await prisma.house.findUnique({
+    where: {
+      address, // where id in the (schema) equals to id provided in (req)
+    },
+    include: {
+      owner: true,
+      builder: true,
+    }
+  })
+  res.json(house)
+})
+
 
 app.listen(port, () => console.log(`Express server listening on ${port}`))
