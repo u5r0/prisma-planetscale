@@ -24,9 +24,9 @@ model House {
   address      String   @unique
   wifiPassword String?
   owner        User     @relation("HouseOwner", fields: [ownerId], references: [id])
-  ownerId      String   @unique
+  ownerId      String   
   builder      User     @relation("HouseBuilder", fields: [builderId], references: [id])
-  builderId    String   @unique
+  builderId    String   
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   
