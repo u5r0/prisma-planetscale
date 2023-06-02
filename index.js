@@ -77,29 +77,56 @@ app.get('/house/:id', async (req, res) => {
 })
 
 // Read House by address (in req body)
-app.get('/house', async (req, res) => {
-  const address = req.body.address
-  const house = await prisma.house.findUnique({
-    where: {
-      address, // where id in the (schema) equals to id provided in (req)
-    },
-    include: {
-      owner: true,
-      builder: true,
-    }
-  })
-  res.json(house)
-})
-
 // app.get('/house', async (req, res) => {
-//   const allHouses = await prisma.house.findMany({
+//   const address = req.body.address
+//   const house = await prisma.house.findUnique({
+//     where: {
+//       address, // where id in the (schema) equals to id provided in (req)
+//     },
 //     include: {
 //       owner: true,
 //       builder: true,
 //     }
 //   })
-//   res.json(allHouses)
+//   res.json(house)
 // })
+
+app.get('/house', async (req, res) => {
+  const allHouses = await prisma.house.findMany({
+    include: {
+      owner: true,
+      builder: true,
+    }
+  })
+  res.json(allHouses)
+})
+
+app.get('/house/with-filters', async (req, res) => {
+  const filteredHouses = await prisma.house.findMany({
+    where: {
+      wifiPassword: {
+        not: null,
+      },
+      owner: {
+        age: {
+          gte: 22
+        }
+      }
+    },
+    orderBy: [
+      {
+        owner: {
+          firstName: 'desc'
+        }
+      }
+    ],
+    include: {
+      owner: true,
+      builder: true
+    }
+  })
+  res.json(filteredHouses)
+})
 
 
 app.listen(port, () => console.log(`Express server listening on ${port}`))
